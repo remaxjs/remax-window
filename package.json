@@ -1,0 +1,29 @@
+{
+  "name": "remax-window",
+  "version": "1.0.0-alpha.1",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "rimraf lib && tsc"
+  },
+  "files": [
+    "lib",
+    "package.json",
+    "README.md"
+  ],
+  "repository": "git@github.com:remaxjs/remax-window.git",
+  "author": "caihuanyu <eterlf41@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "remax": "^1.0.15"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.2",
+    "react": "^16.9.0",
+    "remax": "^1.0.15",
+    "rimraf": "^3.0.0",
+    "typescript": "^3.6.3"
+  }
+}
