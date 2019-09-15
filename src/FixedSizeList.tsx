@@ -87,8 +87,8 @@ const FixedSizeListRender: React.FC<Props> = (props, ref) => {
   }
 
   const elements = React.Children.toArray(children)
-    .filter(isVisible(start, end))
-    .map(cloneElement(ITEM_SIZE));
+    .map(cloneElement(ITEM_SIZE))
+    .filter(isVisible(start, end));
 
   return (
     <ScrollView
