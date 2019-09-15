@@ -4,7 +4,8 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "rimraf lib && tsc"
+    "build": "rimraf lib && tsc",
+    "release": "standard-version"
   },
   "files": [
     "lib",
@@ -20,10 +21,20 @@
     "remax": "^1.0.15"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^8.1.0",
     "@types/react": "^16.9.2",
+    "husky": "^3.0.5",
+    "prettier": "^1.18.2",
     "react": "^16.9.0",
     "remax": "^1.0.15",
     "rimraf": "^3.0.0",
+    "standard-version": "^7.0.0",
     "typescript": "^3.6.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }

@@ -1,80 +1,107 @@
 import * as React from 'react';
 import { ScrollView, View } from 'remax/wechat';
-import transformRpx from './transformRpx';
+import pxValue from './pxValue';
 
 interface Props {
   className?: string;
   style?: React.CSSProperties;
   itemCount: number;
-  itemSize: number;
+  itemSize: number | string;
   overscanCount?: number;
-  onReachBottom?: () => any;
+  onReachBottom?: () => void;
+  reachBottomThreshold?: number;
 }
 
-const FixedSizeList: React.FC<Props> = props => {
+const DEFAULT_OVERSCAN_COUNT = 5;
+
+function useVisibleRange(
+  overscanCount: number
+): [number, number, typeof setRange] {
+  const [start, setStart] = React.useState(0 - overscanCount);
+  const [end, setEnd] = React.useState(0 + 2 * overscanCount);
+
+  function setRange(offset: number) {
+    setStart(offset - overscanCount);
+    setEnd(offset + 2 * overscanCount);
+  }
+
+  return [start, end, setRange];
+}
+
+const cloneElement = (size: number) => (element: any, index: number) => {
+  if (!React.isValidElement(element)) {
+    return element;
+  }
+
+  const reactElement: React.ReactElement = element;
+
+  const elementStyle = reactElement.props.style || {};
+
+  return React.cloneElement(reactElement, {
+    ...(reactElement.props || {}),
+    style: {
+      ...elementStyle,
+      position: 'absolute',
+      top: index * size + 'px'
+    }
+  });
+};
+
+const isVisible = (start: number, end: number) => (_: any, index: number) =>
+  index >= start && index <= end;
+
+const FixedSizeListRender: React.FC<Props> = (props, ref) => {
   const {
     className,
-    overscanCount,
+    overscanCount = DEFAULT_OVERSCAN_COUNT,
     children,
     style,
     itemCount,
     itemSize,
-    onReachBottom
+    onReachBottom,
+    reachBottomThreshold
   } = props;
-  const OVERSCAN_COUNT = overscanCount || 5;
-  const [startIndex, setStartIndex] = React.useState(0 - OVERSCAN_COUNT);
-  const [endIndex, setEndIndex] = React.useState(0 + OVERSCAN_COUNT);
+  const ITEM_SIZE = pxValue(itemSize);
+  const LIST_HEIGHT = itemCount * ITEM_SIZE;
+  const REACH_BOTTOM_THRESHOLD = reachBottomThreshold || overscanCount;
   const reachBottomRef = React.useRef(false);
-  const listHeight = itemCount * itemSize;
-  const elements = React.Children.toArray(children)
-    .map((element, index) => {
-      if (React.isValidElement(element)) {
-        const elementStyle = element.props.style || {};
-        return React.cloneElement(element, {
-          ...(element.props || {}),
-          style: {
-            ...elementStyle,
-            position: 'absolute',
-            top: transformRpx(index * itemSize) + 'px'
-          }
-        });
-      }
-
-      return element;
-    })
-    .filter((_, index) => index >= startIndex && index <= endIndex);
+  const [start, end, setRange] = useVisibleRange(overscanCount);
 
   function handleScroll(event: any) {
-    const { scrollTop } = event.detail;
-    const offset = Math.floor(scrollTop / transformRpx(itemSize));
-    const newEndIndex = offset + 2 * OVERSCAN_COUNT;
-
-    if (itemCount - endIndex <= OVERSCAN_COUNT) {
-      if (!reachBottomRef.current && typeof onReachBottom === 'function') {
-        onReachBottom();
+    if (itemCount - end <= REACH_BOTTOM_THRESHOLD) {
+      if (!reachBottomRef.current) {
         reachBottomRef.current = true;
+
+        if (typeof onReachBottom === 'function') {
+          onReachBottom();
+        }
       }
     } else {
       reachBottomRef.current = false;
     }
 
-    setStartIndex(offset - OVERSCAN_COUNT);
-    setEndIndex(offset + 2 * OVERSCAN_COUNT);
+    const { scrollTop } = event.detail;
+    const offset = Math.floor(scrollTop / ITEM_SIZE);
+
+    setRange(offset);
   }
+
+  const elements = React.Children.toArray(children)
+    .filter(isVisible(start, end))
+    .map(cloneElement(ITEM_SIZE));
 
   return (
     <ScrollView
       className={className}
       onScroll={handleScroll}
       scrollY={true}
-      style={{
-        ...style
-      }}
+      style={style}
+      ref={ref}
     >
       <View
         style={{
           position: 'relative',
-          height: transformRpx(listHeight) + 'px'
+          height: LIST_HEIGHT + 'px'
         }}
       >
         {elements}
@@ -83,8 +110,10 @@ const FixedSizeList: React.FC<Props> = props => {
   );
 };
 
+const FixedSizeList = React.forwardRef(FixedSizeListRender);
+
 FixedSizeList.defaultProps = {
-  overscanCount: 5
+  overscanCount: DEFAULT_OVERSCAN_COUNT
 };
 
 export default FixedSizeList;
