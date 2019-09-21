@@ -9,9 +9,8 @@
     "rootDir": "./src",
     "strict": true,
     "moduleResolution": "node",
-    "baseUrl": "./src",
-    "paths": {},
     "types": [],
     "esModuleInterop": true
-  }
+  },
+  "include": ["./src"]
 }
