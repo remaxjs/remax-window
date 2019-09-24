@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-0](https://github.com/remaxjs/remax-window/compare/v1.0.0...v1.1.0-0) (2019-09-24)
+
+
+### Features
+
+* 支持字节跳动小程序 ([f4a0e69](https://github.com/remaxjs/remax-window/commit/f4a0e69))
+
 ## [1.0.0](https://github.com/remaxjs/remax-window/compare/v1.0.0-alpha.5...v1.0.0) (2019-09-24)
 
 ## [1.0.0-alpha.5](https://github.com/remaxjs/remax-window/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2019-09-24)
