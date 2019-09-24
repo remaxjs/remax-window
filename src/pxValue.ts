@@ -1,20 +1,16 @@
-import createTransformRpx from './transformRpx';
+import transformRpx from './transformRpx';
 
-export default (getSystemInfoSync: Function) => {
-  const transformRpx = createTransformRpx(getSystemInfoSync);
+export default (value: number | string) => {
+  // 数值
+  if (typeof value === 'number') {
+    return transformRpx(value);
+  }
 
-  return (value: number | string) => {
-    // 数值
-    if (typeof value === 'number') {
-      return transformRpx(value);
-    }
+  // rpx
+  if (value.endsWith('rpx')) {
+    return transformRpx(Number(value.replace('rpx', '')));
+  }
 
-    // rpx
-    if (value.endsWith('rpx')) {
-      return transformRpx(Number(value.replace('rpx', '')));
-    }
-
-    // px
-    return Number(value.replace('px', ''));
-  };
+  // px
+  return Number(value.replace('px', ''));
 };

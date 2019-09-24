@@ -18,7 +18,7 @@
   "private": false,
   "peerDependencies": {
     "react": "^16.8.0",
-    "remax": "^1.0.15"
+    "remax": "^1.1.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.1.0",
@@ -27,7 +27,7 @@
     "husky": "^3.0.5",
     "prettier": "^1.18.2",
     "react": "^16.9.0",
-    "remax": "^1.0.15",
+    "remax": "^1.1.1",
     "rimraf": "^3.0.0",
     "standard-version": "^7.0.0",
     "typescript": "^3.6.3"
