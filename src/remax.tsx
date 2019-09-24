@@ -10,6 +10,11 @@ import {
   ScrollView as WechatScrollView,
   getSystemInfoSync as wechatGetSystemInfoSync
 } from 'remax/wechat';
+import {
+  View as TtView,
+  ScrollView as TtScrollView,
+  getSystemInfoSync as ttGetSystemInfoSync
+} from 'remax/toutiao';
 
 interface ViewProps {
   style: React.CSSProperties;
@@ -21,6 +26,10 @@ export const View: React.FC<React.PropsWithChildren<ViewProps>> = props => {
       return <AlipayView style={props.style} >
         {props.children}
       </AlipayView>;
+    case 'toutiao':
+      return <TtView style={props.style} >
+        {props.children}
+      </TtView>;
     case 'wechat':
     default:
       return <WechatView style={props.style} >
@@ -53,6 +62,18 @@ const ScrollViewRender: React.FC<React.PropsWithChildren<ScrollViewProps>> = (
           {props.children}
         </AlipayScrollView>
       );
+    case 'toutiao':
+      return (
+        <TtScrollView
+          style={props.style}
+          className={props.className}
+          onScroll={props.onScroll}
+          scrollY={props.scrollY}
+          ref={ref}
+        >
+          {props.children}
+        </TtScrollView>
+      );
     case 'wechat':
     default:
       return (
@@ -73,11 +94,15 @@ export const ScrollView = React.forwardRef(ScrollViewRender);
 
 export let getSystemInfoSync:
   | typeof wechatGetSystemInfoSync
-  | typeof alipayGetSystemInfoSync;
+  | typeof alipayGetSystemInfoSync
+  | typeof ttGetSystemInfoSync;
 
 switch (Platform.current) {
   case 'wechat':
     getSystemInfoSync = wechatGetSystemInfoSync;
+    break;
+  case 'toutiao':
+    getSystemInfoSync = ttGetSystemInfoSync;
     break;
   case 'alipay':
     getSystemInfoSync = alipayGetSystemInfoSync;
