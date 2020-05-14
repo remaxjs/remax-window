@@ -1,6 +1,6 @@
 # Remax Window
 
-# 已废弃，建议使用 https://github.com/noyobo/remax-recycle-view
+# 已废弃，建议使用 https://github.com/remaxjs/remax-recycle-view
 
 ![npm](https://img.shields.io/npm/v/remax-window?style=flat-square)
 
